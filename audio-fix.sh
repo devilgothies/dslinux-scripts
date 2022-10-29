@@ -46,14 +46,14 @@ then
 	echo
 	echo -e "${Cyan}[*] MÓDULOS ENCONTRADOS: ${ColorOff}"
 	
-	if OUT_GS=$(GREP_SINK); then # Verifica e informa os speakers reconhecidos
+  if [[ $(OUT_GS=$(GREP_SINK)) ]]; then # Verifica e informa os speakers reconhecidos
 		echo -e "${Green}Fone: $OUT_GS ${ColorOff}"
 	else
 		echo -e "${Red}[!] Nenhum speaker (fone) encontrado.${ColorOff}"
 	fi
 	
 
-	if OUT_GM=$(GREP_SOURCE); then # Verifica e informa os microfones reconhecidos
+  if [[ $(OUT_GM=$(GREP_SOURCE)) ]]; then # Verifica e informa os microfones reconhecidos
 		echo -e "${Green}Microfone: $OUT_GM ${ColorOff}"
 	else
 		echo -e "${Red}[!] Nenhum microfone encontrado.${ColorOff}"
