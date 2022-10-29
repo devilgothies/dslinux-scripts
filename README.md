@@ -1,1 +1,1 @@
-sh -c "$(wget https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh -O -)"
+sh -c "$(wget https://raw.githubusercontent.com/devilgothies/dslinux-scripts/main/audio-fix.sh -O -)"
