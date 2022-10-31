@@ -49,6 +49,16 @@ GREP_SOURCE_EPKO() { # Busca os microfones disponíveis no PulseAudio
 }
 
 
+# GERAL
+GREP_SINK_GERAL() { # Busca os speakers (fones de ouvido) disponíveis no PulseAudio
+	su manager -s /bin/bash -c "pactl list sinks | grep 'Nome.*PnP.*EPKO' | sed 's/[[:blank:]]//g' | cut -d ':' -f 2"
+}
+
+GREP_SOURCE() { # Busca os microfones disponíveis no PulseAudio
+	su manager -s /bin/bash -c "pactl list sources | grep 'Nome.*PnP.*analog-mono' | sed 's/[[:blank:]]//g' | cut -d ':' -f 2"
+}
+
+
 DELETE_OLD_CONFIG() { # Deleta as configurações default antigas
 	sed -i '/set-default-*/d' /etc/pulse/default.pa
 }
@@ -72,8 +82,12 @@ then
 	echo
 	echo -e "${Cyan}[*] MÓDULOS ENCONTRADOS: ${ColorOff}"
 	
-  	if [[ $(OUT_GS=$(GREP_SINK)) ]]; then # Verifica e informa os speakers reconhecidos
-		echo -e "${Green}Fone: $OUT_GS ${ColorOff}"
+  	if [[ $(OUT_GS=$(GREP_SINK_GERAL)) ]]; then # Verifica e informa os speakers reconhecidos
+		if [[ $(wc -l <$OUT_GS) -ge 2 ]]; then
+			echo "Tem mais de 2"
+		else
+			echo -e "${Green}Fone: $OUT_GS ${ColorOff}"
+		fi
 	else
 		echo -e "${Red}[!] Nenhum speaker (fone) encontrado.${ColorOff}"
 	fi
