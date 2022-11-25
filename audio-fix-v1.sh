@@ -27,7 +27,7 @@ GREP_SINK() { # Busca os speakers (fones de ouvido) disponíveis no PulseAudio
 }
 
 GREP_SOURCE() { # Busca os microfones disponíveis no PulseAudio
-	su manager -s /bin/bash -c "pactl list sources | grep -E 'Nome.*PnP.*monitor|Nome.*EPKO.*monitor' | sed 's/[[:blank:]]//g' | cut -d ':' -f 2"
+	su manager -s /bin/bash -c "pactl list sources | grep -E 'Nome.*PnP.*mono|Nome.*EPKO.*mono' | sed 's/[[:blank:]]//g' | cut -d ':' -f 2"
 }
 
 DELETE_OLD_CONFIG() { # Deleta as configurações default antigas
@@ -81,7 +81,7 @@ then
 			echo -e "${Green}[+] Configurações finalizadas com sucesso.${ColorOff}"
 			echo
 			echo -e "${Cyan}[*] Resumo: ${ColorOff}"
-			tail -n 4 /etc/pulse/default.pa
+			tail -n 2 /etc/pulse/default.pa
 		fi
 	else
 		echo
