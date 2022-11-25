@@ -19,10 +19,9 @@ Purple='\033[0;95m'      # Roxo
 Cyan='\033[0;96m'        # Ciano
 
 
-#############################
-# BUSCANDO MÓDULOS DE ÁUDIO #
-#############################
-# USB PNP
+###########
+# FUNÇÕES #
+###########
 GREP_SINK() { # Busca os speakers (fones de ouvido) disponíveis no PulseAudio
 	su manager -s /bin/bash -c "pactl list sinks | grep -E 'Nome.*PnP|Nome.*EPKO' | sed 's/[[:blank:]]//g' | cut -d ':' -f 2"
 }
@@ -35,6 +34,10 @@ DELETE_OLD_CONFIG() { # Deleta as configurações default antigas
 	sed -i '/set-default-*/d' /etc/pulse/default.pa
 }
 
+ADD_NEW_CONFIG() {
+	echo "set-default-sink "$OUT_GS >> /etc/pulse/default.pa
+	echo "set-default-source "$OUT_GM >> /etc/pulse/default.pa
+}
 
 ####################
 # SHELL INTERATIVO #
@@ -43,15 +46,14 @@ echo -e "${Yellow}[+] Ajuste das configurações de áudio do PulseAudio no DSLi
 read -r -p "[*] Deseja fazer as alterações? [S/n]  " response
 if [[ "$response" =~ ^([sS][eE][yY]|[sS])$ ]]
 then
-	if (( $EUID != 0 )); then
+	if (( $EUID != 0 )); then # Verifica se o script está sendo executado como root
     	echo -e "${Red}[!] Você precisa estar no usuário root para executar esse script!${ColorOff}"
     	exit
 	fi
 
 	echo
 	echo -e "${Cyan}[*] Procurando módulos de áudio...${ColorOff}"
-	sleep 1
-	echo
+	sleep 1; echo
 	echo -e "${Cyan}[*] MÓDULOS ENCONTRADOS: ${ColorOff}"
 	
   	if OUT_GS=$(GREP_SINK); then # Verifica e informa os speakers reconhecidos
@@ -67,20 +69,19 @@ then
 	fi
 
 	if [ "$(echo $OUT_GS | sed -re '/^$/d' | wc -l)" -eq 1 ] ; then # Verifica se algum módulo foi encontrado, caso contrário, o script é abortado
-		echo
-		sleep 1
-		echo -e "${Cyan}[*] Apagando configurações anteriores...${ColorOff}"
+		echo; sleep 1
+		echo -e "${Cyan}[*] Apagando configurações antigas...${ColorOff}"
 		sleep 1
 		DELETE_OLD_CONFIG
 		echo -e "${Cyan}[*] Adicionando configurações novas...${ColorOff}"
 		sleep 1
-		echo "set-default-sink "$OUT_GS >> /etc/pulse/default.pa
-		echo "set-default-source "$OUT_GM >> /etc/pulse/default.pa
+		ADD_NEW_CONFIG
 		if [[ $? -eq 0 ]]; then # Verifica se as configurações novas foram adicionas corretamente
 			echo
-			echo -e "${Green}[+] Configurações finalizadas.${ColorOff}"
-			echo -e "${Green}[+] Resumo: ${ColorOff}"
-			tail -n 3 /etc/pulse/default.pa
+			echo -e "${Green}[+] Configurações finalizadas com sucesso.${ColorOff}"
+			echo
+			echo -e "${Cyan}[*] Resumo: ${ColorOff}"
+			tail -n 4 /etc/pulse/default.pa
 		fi
 	else
 		echo
