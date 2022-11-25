@@ -84,7 +84,7 @@ then
 		echo -e "${Red}[!] Nenhum microfone encontrado.${ColorOff}"
 	fi
 
-	if OUT_GS=$(GREP_SINK) && OUT_GM=$(GREP_SOURCE); then # Verifica se algum módulo foi encontrado, caso contrário, o script é abortado
+	if [ "$(echo $OUT_GS | sed -re '/^$/d' | wc -l)" -gt 0 ] ; then # Verifica se algum módulo foi encontrado, caso contrário, o script é abortado
 		echo
 		sleep 1
 		echo -e "${Cyan}[*] Apagando configurações anteriores...${ColorOff}"
