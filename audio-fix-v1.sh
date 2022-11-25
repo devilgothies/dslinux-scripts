@@ -19,13 +19,6 @@ Purple='\033[0;95m'      # Roxo
 Cyan='\033[0;96m'        # Ciano
 
 
-########################
-# DISPOSITIVOS PADRÕES #
-########################
-MULTILASER_USB_SINK="alsa_output.usb-C-Media_Electronics_Inc._USB_PnP_Sound_Device-00.analog-stereo" # Speaker USB Headset Multilaser
-MULTILASER_USB_MIC="alsa_input.usb-C-Media_Electronics_Inc._USB_PnP_Sound_Device-00.analog-mono" # Microfone USB Headset Multilaser
-
-
 #############################
 # BUSCANDO MÓDULOS DE ÁUDIO #
 #############################
@@ -37,17 +30,6 @@ GREP_SINK() { # Busca os speakers (fones de ouvido) disponíveis no PulseAudio
 GREP_SOURCE() { # Busca os microfones disponíveis no PulseAudio
 	su manager -s /bin/bash -c "pactl list sources | grep -E 'Nome.*PnP.*monitor|Nome.*EPKO.*monitor' | sed 's/[[:blank:]]//g' | cut -d ':' -f 2"
 }
-
-
-# EPKO TIARA
-GREP_SINK_EPKO() { # Busca os speakers (fones de ouvido) disponíveis no PulseAudio
-	su manager -s /bin/bash -c "pactl list sinks | grep 'Nome.*EPKO' | sed 's/[[:blank:]]//g' | cut -d ':' -f 2"
-}
-
-GREP_SOURCE_EPKO() { # Busca os microfones disponíveis no PulseAudio
-	su manager -s /bin/bash -c "pactl list sources | grep 'Nome.*EPKO.*analog-mono' | sed 's/[[:blank:]]//g' | cut -d ':' -f 2"
-}
-
 
 DELETE_OLD_CONFIG() { # Deleta as configurações default antigas
 	sed -i '/set-default-*/d' /etc/pulse/default.pa
@@ -89,7 +71,7 @@ then
 		sleep 1
 		echo -e "${Cyan}[*] Apagando configurações anteriores...${ColorOff}"
 		sleep 1
-		sed -i '/set-default-*/d' /etc/pulse/default.pa
+		DELETE_OLD_CONFIG
 		echo -e "${Cyan}[*] Adicionando configurações novas...${ColorOff}"
 		sleep 1
 		echo "set-default-sink "$OUT_GS >> /etc/pulse/default.pa
@@ -102,6 +84,7 @@ then
 		fi
 	else
 		echo
+		DELETE_OLD_CONFIG
 		echo -e "${Red}[!] As configurações não puderam ser finalizadas.${ColorOff}"
 	fi
 else
