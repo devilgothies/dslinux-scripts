@@ -1,12 +1,3 @@
-#  ___      _ _                _
-# |   \ ___| | |_ __ _ ____  _| |
-# | |) / -_) |  _/ _` (_-< || | |
-# |___/\___|_|\__\__,_/__/\_,_|_|
-#
-# Script para ajustar os speakers/headsets usados nas lojas, nas configurações default do PulseAudio. @ Utilização no DSLinux 4
-# Cheque o repositório oficial -> https://gitlab.deltasul.com.br/NicolasAraujo/dslinux-scripts
-# Desenvolvido por Nicolas Araujo
-
 #########
 # CORES #
 #########
